@@ -1,4 +1,14 @@
+language: java
+
+sudo: false
+
 addons:
- apt:
-  packages:
-   - openjdk-8-jdk
+  apt:
+    packages:
+      - openjdk-8-jdk
+
+jdk:
+  - oraclejdk9
+  - oraclejdk8
+  - openjdk7
+  - openjdk6
