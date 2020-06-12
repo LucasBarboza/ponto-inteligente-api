@@ -1,7 +1,9 @@
 package com.estudoAPI.pontointeligente.api.controllers;
 
 import java.security.NoSuchAlgorithmException;
+
 import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import com.estudoAPI.pontointeligente.api.services.FuncionarioService;
 import com.estudoAPI.pontointeligente.api.utils.PasswordUtils;
 
 @RestController
-@RequestMapping("/api/cadastrar-pj")
+@RequestMapping("/api/cadastrar")
 @CrossOrigin(origins = "*")
 public class CadastroPJController {
 	
@@ -37,27 +39,26 @@ public class CadastroPJController {
 	
 	@PostMapping
 	public ResponseEntity<Response<CadastroPJDto>> cadastrar(@Valid @RequestBody CadastroPJDto cadastroPJDto,
-	BindingResult result) throws NoSuchAlgorithmException{
-		log.info("Cadastrando PJ: {}",cadastroPJDto.toString());
+			BindingResult result) throws NoSuchAlgorithmException {
+		log.info("Cadastrando PJ: {}", cadastroPJDto.toString());
 		Response<CadastroPJDto> response = new Response<CadastroPJDto>();
-		
-		validarDadosExistentes(cadastroPJDto,result);
+
+		validarDadosExistentes(cadastroPJDto, result);
 		Empresa empresa = this.converterDtoParaEmpresa(cadastroPJDto);
-		Funcionario funcionario = this.converterDtoParaFuncionario(cadastroPJDto,result);
-		
+		Funcionario funcionario = this.converterDtoParaFuncionario(cadastroPJDto, result);
+
 		if (result.hasErrors()) {
-			log.info("Erra validação dos cadastra PJ: {}",result.toString());
+			log.error("Erro validando dados de cadastro PJ: {}", result.getAllErrors());
 			result.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
-				return ResponseEntity.badRequest().body(response);
+			return ResponseEntity.badRequest().body(response);
 		}
 
 		this.empresaService.persistir(empresa);
 		funcionario.setEmpresa(empresa);
 		this.funcionarioService.persistir(funcionario);
-		
+
 		response.setData(this.converterCadastroPJDto(funcionario));
 		return ResponseEntity.ok(response);
-	
 	}
 	
 	/**
@@ -87,7 +88,6 @@ public class CadastroPJController {
 		Empresa empresa = new Empresa();
 		empresa.setCnpj(cadastroPJDto.getCnpj());
 		empresa.setRazaoSocial(cadastroPJDto.getRazaoSocial());
-
 		return empresa;
 	}
 
@@ -107,7 +107,6 @@ public class CadastroPJController {
 		funcionario.setCpf(cadastroPJDto.getCpf());
 		funcionario.setPerfil(PerfilEnum.ROLE_ADMIN);
 		funcionario.setSenha(PasswordUtils.gerarBCryp(cadastroPJDto.getSenha()));
-
 		return funcionario;
 	}
 
@@ -125,11 +124,7 @@ public class CadastroPJController {
 		cadastroPJDto.setCpf(funcionario.getCpf());
 		cadastroPJDto.setRazaoSocial(funcionario.getEmpresa().getRazaoSocial());
 		cadastroPJDto.setCnpj(funcionario.getEmpresa().getCnpj());
-
 		return cadastroPJDto;
 	}
 
-	
-	
-	
 }
