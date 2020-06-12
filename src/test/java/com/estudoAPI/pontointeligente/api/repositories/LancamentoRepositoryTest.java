@@ -2,6 +2,8 @@ package com.estudoAPI.pontointeligente.api.repositories;
 
 
 import static org.junit.Assert.assertEquals;
+
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
@@ -35,8 +37,10 @@ public class LancamentoRepositoryTest {
 	private FuncionarioRepository funcionarioRepository;
 	
 	@Autowired
-	private EmpresaRepository empresaRepository;
+	private EmpresaRepository empresaRepository;	
 	
+	private static final String EMAIL = "email@email.com";
+	private static final String CPF = "24291173474";
 	private Long funcionarioId;
 
 	@Before
@@ -74,6 +78,8 @@ public class LancamentoRepositoryTest {
 		lancameto.setData(new Date());
 		lancameto.setTipo(TipoEnum.INICIO_ALMOCO);
 		lancameto.setFuncionario(funcionario);
+		lancameto.setDescricao("Almoço");
+		lancameto.setLocalizacao("Sede");
 		return lancameto;
 	}
 
@@ -82,9 +88,12 @@ public class LancamentoRepositoryTest {
 		funcionario.setNome("Fulano de Tal");
 		funcionario.setPerfil(PerfilEnum.ROLE_USUARIO);
 		funcionario.setSenha(PasswordUtils.gerarBCryp("123456"));
-		funcionario.setCpf("24291173474");
-		funcionario.setEmail("email@email.com");
+		funcionario.setCpf(CPF);
+		funcionario.setEmail(EMAIL);
 		funcionario.setEmpresa(empresa);
+		funcionario.setQtdHorasAlmoco(8f);
+		funcionario.setQtdHorasTRabalhoDia(8f);
+		funcionario.setValorHora(new BigDecimal(60));
 		return funcionario;
 	}
 

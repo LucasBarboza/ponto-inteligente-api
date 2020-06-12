@@ -2,6 +2,8 @@ package com.estudoAPI.pontointeligente.api.repositories;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import org.junit.After;
 import org.junit.Before;
@@ -45,35 +47,30 @@ public class FuncionarioRepositoryTest {
 	@Test
 	public void testBuscarFuncionarioPorEmail() {
 		Funcionario funcionario = this.funcionarioRepository.findByEmail(EMAIL);
-
 		assertEquals(EMAIL, funcionario.getEmail());
 	}
 
 	@Test
 	public void testBuscarFuncionarioPorCpf() {
 		Funcionario funcionario = this.funcionarioRepository.findByCpf(CPF);
-
 		assertEquals(CPF, funcionario.getCpf());
 	}
 
 	@Test
 	public void testBuscarFuncionarioPorEmailECpf() {
 		Funcionario funcionario = this.funcionarioRepository.findByCpfOrEmail(CPF, EMAIL);
-
 		assertNotNull(funcionario);
 	}
 
 	@Test
 	public void testBuscarFuncionarioPorEmailOuCpfParaEmailInvalido() {
 		Funcionario funcionario = this.funcionarioRepository.findByCpfOrEmail(CPF, "email@invalido.com");
-
 		assertNotNull(funcionario);
 	}
 
 	@Test
 	public void testBuscarFuncionarioPorEmailECpfParaCpfInvalido() {
 		Funcionario funcionario = this.funcionarioRepository.findByCpfOrEmail("12345678901", EMAIL);
-
 		assertNotNull(funcionario);
 	}
 
@@ -85,6 +82,9 @@ public class FuncionarioRepositoryTest {
 		funcionario.setCpf(CPF);
 		funcionario.setEmail(EMAIL);
 		funcionario.setEmpresa(empresa);
+		funcionario.setQtdHorasAlmoco(8f);
+		funcionario.setQtdHorasTRabalhoDia(8f);
+		funcionario.setValorHora(new BigDecimal(60));
 		return funcionario;
 	}
 
