@@ -92,7 +92,7 @@ public class LancamentoRepositoryTest {
 		funcionario.setEmail(EMAIL);
 		funcionario.setEmpresa(empresa);
 		funcionario.setQtdHorasAlmoco(8f);
-		funcionario.setQtdHorasTRabalhoDia(8f);
+		funcionario.setQtdHorasTrabalhoDia(8f);
 		funcionario.setValorHora(new BigDecimal(60));
 		return funcionario;
 	}
