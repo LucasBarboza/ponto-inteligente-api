@@ -1,9 +1,7 @@
 package com.estudoAPI.pontointeligente.api.controllers;
 
 import java.security.NoSuchAlgorithmException;
-
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.estudoAPI.pontointeligente.api.dtos.CadastroPJDto;
 import com.estudoAPI.pontointeligente.api.entities.Empresa;
@@ -24,19 +23,31 @@ import com.estudoAPI.pontointeligente.api.services.EmpresaService;
 import com.estudoAPI.pontointeligente.api.services.FuncionarioService;
 import com.estudoAPI.pontointeligente.api.utils.PasswordUtils;
 
+
 @RestController
-@RequestMapping("/api/cadastrar")
+@RequestMapping(value = "/api/cadastrar-pj")
 @CrossOrigin(origins = "*")
 public class CadastroPJController {
-	
+
+	private static final Logger log = LoggerFactory.getLogger(CadastroPJController.class);
+
 	@Autowired
 	private FuncionarioService funcionarioService;
 
 	@Autowired
 	private EmpresaService empresaService;
 
-	private static final Logger log = LoggerFactory.getLogger(CadastroPJController.class);
+	public CadastroPJController() {
+	}
 	
+	/**
+	 * Cadastra uma pessoa jurídica no sistema.
+	 * 
+	 * @param cadastroPJDto
+	 * @param result
+	 * @return ResponseEntity<Response<CadastroPJDto>>
+	 * @throws NoSuchAlgorithmException
+	 */
 	@PostMapping
 	public ResponseEntity<Response<CadastroPJDto>> cadastrar(@Valid @RequestBody CadastroPJDto cadastroPJDto,
 			BindingResult result) throws NoSuchAlgorithmException {
@@ -60,7 +71,7 @@ public class CadastroPJController {
 		response.setData(this.converterCadastroPJDto(funcionario));
 		return ResponseEntity.ok(response);
 	}
-	
+
 	/**
 	 * Verifica se a empresa ou funcionário já existem na base de dados.
 	 * 
@@ -88,6 +99,7 @@ public class CadastroPJController {
 		Empresa empresa = new Empresa();
 		empresa.setCnpj(cadastroPJDto.getCnpj());
 		empresa.setRazaoSocial(cadastroPJDto.getRazaoSocial());
+
 		return empresa;
 	}
 
@@ -107,6 +119,7 @@ public class CadastroPJController {
 		funcionario.setCpf(cadastroPJDto.getCpf());
 		funcionario.setPerfil(PerfilEnum.ROLE_ADMIN);
 		funcionario.setSenha(PasswordUtils.gerarBCryp(cadastroPJDto.getSenha()));
+
 		return funcionario;
 	}
 
@@ -124,6 +137,7 @@ public class CadastroPJController {
 		cadastroPJDto.setCpf(funcionario.getCpf());
 		cadastroPJDto.setRazaoSocial(funcionario.getEmpresa().getRazaoSocial());
 		cadastroPJDto.setCnpj(funcionario.getEmpresa().getCnpj());
+
 		return cadastroPJDto;
 	}
 
